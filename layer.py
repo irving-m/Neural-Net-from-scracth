@@ -9,19 +9,29 @@ class Network():
         self.cost = cost
 
         self.a_record = []
-
+        self.delta_record = []
 
     def forward_prop(self):
         a = np.array(self.input).T
+        self.a_record.append(a)
 
         for layer in self.layers:
+
             z = np.matmul(layer.w, a) + layer.b.reshape(-1, 1)
             a = layer.func(z)
 
+            self.a_record.append(a)
+
         self.output = a
 
-             
-            
+    
+    def back_prop(self):
+        delta = np.multiply()
+
+
+        pass
+  
+
 
 
 class Layer():
@@ -41,15 +51,14 @@ net = Network(x, [Layer(np.array([[0.7, -0.3, -0.1],
                         np.array([1.2, .3]),
                         ReLu
                         ), 
-                    Layer(np.array([[-1.3, -0.6]]),
-                          np.array([2.4]),
+                    Layer(np.array([[1.2, -0.6]]),
+                          np.array([1]),
                           ReLu
                         )
                     ]
                 )
 
 net.forward_prop()
-print(net.output)
 
 
 
