@@ -13,12 +13,12 @@ def init_params(x, y):
 
 
 def forward(input, w, b, func):
-    z = np.matmul(input, w) + b
+    z = np.matmul(w, input) + b
     output = func(z)
 
     return output
 
 
-def backward(input, func, ):
+def backward(input, func):
     pass
 

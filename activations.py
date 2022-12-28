@@ -6,9 +6,13 @@ def ReLu(x):
 
 
 def softmax(x):
-    
     return np.exp(x)/sum(np.exp(x))
     
+
+def identity(x):
+    return x
+
+
 if __name__ == "__main__":
 
     x = np.array([1.3, 5.1, 2.2, 0.7, 1.1])
