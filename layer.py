@@ -6,11 +6,12 @@ from cost import *
 
 
 class Network():
-    def __init__(self, input, target, layers, alpha = 0.1, cost= None):
+    def __init__(self, input, target, layers, alpha = 0.1, iter= 1000, cost= None):
         self.input = np.array(input).T
         self.target = np.array(target).T
         self.layers = layers
         self.alpha = alpha
+        self.iter = iter
         self.cost = cost
 
         self.n_layers = len(layers)
@@ -73,7 +74,7 @@ class Network():
 
 
     def fit(self):
-        for i in range(1000):
+        for i in range(self.iter):
             self.forward_prop()
             self.back_prop()
             self.gradient_desc()
@@ -97,7 +98,7 @@ y = np.array([3, 4, 2, -5])
 
 
 net2 = Network(x, y, [Layer(2, ReLu, d_ReLu), 
-                    Layer(1,ReLu, d_ReLu)])
+                    Layer(1,softmax, d_softmax)])
 
 print(net2.w)
 
