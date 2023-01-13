@@ -9,10 +9,9 @@ from aux_functions import standard_scaler
 
 class Network():
     def __init__(self, input, target, layers, alpha = 0.1, iter= 1000):
-        self.input = np.array(input).T
-        self.y_true = target
+        self.input = np.array(standard_scaler(input)).T
         #self.target = np.array(one_hot(target)).T
-        self.target = np.array(standard_scaler(target)).T
+        self.target = np.array(target).T
         self.layers = layers #list of Layer objects
         self.alpha = alpha
         self.iter = iter
@@ -47,29 +46,29 @@ class Network():
             self.a_record.append(a)
         
 
-
     def back_prop(self):
-        
+
         self.dw_record = []
         self.db_record = []
 
-        delta = np.multiply(self.a_record[-1] - self.target, self.layers[-1].prime(self.z_record[-1]))
+        delta = np.multiply((self.a_record[-1] - self.target)/self.n, self.layers[-1].prime(self.z_record[-1]))
+        index = range(len(self.layers))[::-1]
 
-        print(delta)
-
-        for i, layer in reversed(list(enumerate(self.layers))):
+        for i, layer in zip(index, reversed(self.layers)):
             dw = np.matmul(delta, self.a_record[i].T)/self.n
             db = np.matmul(delta, np.ones((self.n, 1)))/self.n
 
             self.dw_record.append(dw)
             self.db_record.append(db)
-            
+
             if i > 0:
                 delta = np.multiply(np.matmul(self.w[i].T, delta), self.layers[i - 1].prime(self.z_record[i - 1]))
 
-
     def gradient_desc(self):
+        
+        #print(f"dw: {self.dw_record[::-1]}")
         w_copy = self.w
+
         for i, (w, dw) in enumerate(zip(w_copy, self.dw_record[::-1])):
             self.w[i] = w - self.alpha*dw
 
@@ -84,12 +83,21 @@ class Network():
             self.back_prop()
             self.gradient_desc()
 
-            if i % 1 == 0:
+            if i % (self.iter/10) == 0:
+                
+                #print(f"w: {self.w[0][0]}")
                 print(f"Iteration: {i + 1} / {self.iter} =====================================")
                 #print(self.a_record)
-                print(self.w)
-                #print(f"Accuracy: {get_accuracy(self.a_record[-1], self.y_true)}")
+                print(f"Accuracy: {np.mean(0.5*(self.a_record[-1] - self.target)**2)}")
         
+
+    def predict(self, a):
+        #for i, layer in enumerate(self.layers):
+        for w, b, layer in zip(self.w, self.b, self.layers):
+            z = np.matmul(w, a) + b.reshape(-1, 1)
+            a = layer.func(z)
+
+        return a
 
 class Layer():
     def __init__(self, neurons, func, prime = None):
