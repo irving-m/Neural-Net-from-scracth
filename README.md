@@ -1,1 +1,1 @@
-# Neural-Net-from-scratch
+# Neural-Net-from-scratch (Not finished)
