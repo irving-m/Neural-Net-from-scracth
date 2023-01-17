@@ -12,7 +12,7 @@ class FCLayer:
 
 
 class Network:
-    def __init__(self, input, target, layers, loss_func= None, learning_rate= 0.1, decay_rate= 0, momentum= 0) -> None:
+    def __init__(self, input, target, layers, loss_func= None, epochs= 1000, learning_rate= 0.1, decay_rate= 0, momentum= 0) -> None:
         self.input = np.array(input).T
 
         if len(target.shape) == 1:
@@ -22,6 +22,7 @@ class Network:
 
         self.layers = layers
         self.loss_func = loss_func
+        self.epochs = epochs
         self.learning_rate = learning_rate
         self.decay_rate = decay_rate
         self.momentum = momentum
@@ -93,11 +94,12 @@ class Network:
         self.db_change = db_change
 
     
-    def fit(self, epochs= 10001):
-
+    def fit(self):
+        epochs = self.epochs
         self.dw_change = [np.zeros_like(w) for w in self.w]
         self.db_change = [np.zeros_like(b) for b in self.b]
 
+        self.loss_track = []
         for epoch in range(epochs):
             learning_rate = self.learning_rate/(1 + self.decay_rate * epoch)
 
@@ -105,11 +107,13 @@ class Network:
             self.back_propagation()
             self.gradient_descent(learning_rate)
 
+            self.loss_track.append(self.loss(self.a_record[-1], self.target))
+
             if not epoch % 100:
                 print(
                     f'epoch: {epoch}, ' +
                     f'accuracy: {self.accuracy(self.a_record[-1], self.target):.3f}, ' + 
-                    f'loss: {self.loss(self.a_record[-1], self.target):.5f}'
+                    f'loss: {self.loss_track[-1]:.5f}'
                     )
 
     
