@@ -18,10 +18,10 @@ from dev_funcs import *
 x_train = x_train.reshape(-1, 28*28)
 x_test = x_test.reshape(-1, 28*28)
 
-Net = Network(x_train, y_train,[
+Net = Network(x_train/255, y_train,[
     FCLayer(10, relu, drelu),
     FCLayer(10, softmax)
-], loss_func= cross_entropy, epochs= 150, learning_rate= 0.01, decay_rate= 0.00, momentum= 0.9
+], loss_func= cross_entropy, epochs= 10001, learning_rate= 0.01, decay_rate= 0.00, momentum= 0.9
 )
 
 Net.fit()
