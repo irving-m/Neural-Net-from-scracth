@@ -39,7 +39,7 @@ class Network:
                 w = np.random.rand(self.layers[i - 1].neurons, layer.neurons) - 0.5
                 self.w.append(w.T)
 
-            self.b.append(np.random.rand(layer.neurons) - 0.5)
+            self.b.append(np.zeros(layer.neurons))
 
     def forward_propagation(self):
         self.z_record = []

@@ -9,13 +9,12 @@ from loss import *
 
 nnfs.init()
 
-X, y = spiral_data(samples= 1000, classes= 3)
+X, y = spiral_data(samples= 100, classes= 3)
 
 net = Network(X, y, [
-    FCLayer(32, relu, drelu),
     FCLayer(64, relu, drelu),
     FCLayer(3, softmax)
-], loss_func= cross_entropy, learning_rate= 0.1, decay_rate= 0.0001, momentum= 0.3
+], loss_func= cross_entropy, learning_rate= 1, decay_rate= 1e-3, momentum= 0.9
 )
 
 net.fit()
